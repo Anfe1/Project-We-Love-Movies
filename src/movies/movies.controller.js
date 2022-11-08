@@ -1,0 +1,42 @@
+const service = require("./movies.service");
+const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+const { response } = require("express");
+//----Middleware----//
+//Check if the movie exists by id
+async function movieExists(req, res, next) {
+  const { movieId } = req.params;
+  const movie = await service.read(movieId);
+  if (movie) {
+    res.locals.movie = movie;
+    next();
+  }
+  next({
+    status: 404,
+    message: `Movie cannot be found`,
+  });
+}
+
+//----Functions----//
+//List all the movies
+async function list(req, res) {
+  // const methodName ="list"
+  // req.log.debug({__filename, methodName });
+  const showing = req.query.is_showing;
+  if (showing) {
+    res.json({ data: await service.listMovies() });
+    //   req.log.trace({ __filename, methodName, return: true, data });
+  } else {
+    res.json({ data: await service.list() });
+  }
+}
+
+async function read(req, res, next) {
+  const knexInstance = req.app.get("db");
+  const { movie } = res.locals;
+  res.json({ data: movie });
+}
+
+module.exports = {
+  list: asyncErrorBoundary(list),
+  read: [asyncErrorBoundary(movieExists), read],
+};
