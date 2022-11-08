@@ -13,10 +13,10 @@ const notFound = require("./errors/notFound");
 app.use(cors());
 app.use(express.json());
 
-//router
+//----router----//
 app.use("/movies", moviesRouter);
 
-//Error handlers
+//----Error handlers----//
 app.use(notFound);
 app.use(errorHandler);
 

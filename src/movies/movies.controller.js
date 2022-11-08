@@ -30,6 +30,11 @@ async function list(req, res) {
   }
 }
 
+//List all the movies avalible at all theaters
+async function listMoviesByTheaters(req, res, next) {
+  res.json({ data: await service.listMoviesByTheaters() });
+}
+
 async function read(req, res, next) {
   const knexInstance = req.app.get("db");
   const { movie } = res.locals;
@@ -39,4 +44,5 @@ async function read(req, res, next) {
 module.exports = {
   list: asyncErrorBoundary(list),
   read: [asyncErrorBoundary(movieExists), read],
+  listMoviesByTheaters,
 };
