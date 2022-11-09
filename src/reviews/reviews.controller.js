@@ -1,24 +1,25 @@
 const reviewsService = require("./reviews.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
-const VALID_PROPERTIES = ["score", "content"];
+// const VALID_PROPERTIES = ["score", "content"];
 
 //----Middleware----//
 //check the propertis to make sure they match
-function hasValidProperties(req, res, next) {
-  const { data = {} } = req.body;
+// function hasValidProperties(req, res, next) {
+//   const { data = {} } = req.body;
 
-  const invalidFields = Object.keys(data).filter(
-    (field) => !VALID_PROPERTIES.includes(field)
-  );
+//   const invalidFields = Object.keys(data).filter(
+//     (field) => !VALID_PROPERTIES.includes(field)
+//   );
 
-  if (invalidFields.length)
-    return next({
-      status: 400,
-      message: `Invalid field(s): ${invalidFields.join(", ")}`,
-    });
-  next();
-}
+//   if (invalidFields.length)
+//     return next({
+//       status: 400,
+//       message: `Invalid field(s): ${invalidFields.join(", ")}`,
+//     });
+//   next();
+// }
+
 //Checks to see if the review exists based on the id
 async function reviewExists(req, res, next) {
   const review = await reviewsService.read(req.params.reviewId);

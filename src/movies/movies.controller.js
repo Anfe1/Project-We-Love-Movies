@@ -1,6 +1,7 @@
 const service = require("./movies.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const { response } = require("express");
+
 //----Middleware----//
 //Check if the movie exists by id
 async function movieExists(req, res, next) {
