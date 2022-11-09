@@ -5,10 +5,11 @@ const { response } = require("express");
 //Check if the movie exists by id
 async function movieExists(req, res, next) {
   const { movieId } = req.params;
+  console.log(movieId);
   const movie = await service.read(movieId);
   if (movie) {
     res.locals.movie = movie;
-    next();
+    return next();
   }
   next({
     status: 404,
@@ -35,6 +36,13 @@ async function listMoviesByTheaters(req, res, next) {
   res.json({ data: await service.listMoviesByTheaters() });
 }
 
+//List all the reviews avalible for a movie
+async function listMoviesByReviews(req, res, next) {
+  const { movie_id } = res.locals.movie;
+  res.json({ data: await service.listMoviesByReviews(movie_id) });
+}
+
+//Reads a single movie enrty based on if exists by id
 async function read(req, res, next) {
   const knexInstance = req.app.get("db");
   const { movie } = res.locals;
@@ -45,4 +53,8 @@ module.exports = {
   list: asyncErrorBoundary(list),
   read: [asyncErrorBoundary(movieExists), read],
   listMoviesByTheaters,
+  listMoviesByReviews: [
+    asyncErrorBoundary(movieExists),
+    asyncErrorBoundary(listMoviesByReviews),
+  ],
 };
